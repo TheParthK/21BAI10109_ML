@@ -1,10 +1,21 @@
 from fastapi import FastAPI, HTTPException
 from .models import User, SessionLocal
 from .search_engine import search_documents
-from .cache import cache_response, get_cached_response
+from .scraper import scrape_news
+from .cache import cache_response, get_cached_response, log_inference_time
 import time
 
 app = FastAPI()
+
+# @app.get('empty-db')
+# def empty_db():
+#     session = SessionLocal()
+#     session.delete()
+
+@app.get('/scrape-news')
+def start_scrape():
+    scrape_news()
+    return {"status" : "News Scraped and added to the DB!"}
 
 @app.get("/health")
 def health_check():
